@@ -29,16 +29,16 @@
   "entity": {
     "sensor": {
       "session_usage": {
-        "name": "Session usage"
+        "name": "Current session"
       },
       "weekly_usage": {
-        "name": "Weekly usage"
+        "name": "Weekly limit"
       },
       "session_reset": {
-        "name": "Session reset"
+        "name": "Current session reset"
       },
       "weekly_reset": {
-        "name": "Weekly reset"
+        "name": "Weekly limit reset"
       }
     }
   }

@@ -42,7 +42,8 @@ def _parse_reset_time(data: dict, period: str) -> datetime | None:
 SENSOR_DESCRIPTIONS: tuple[ClaudeUsageSensorEntityDescription, ...] = (
     ClaudeUsageSensorEntityDescription(
         key="session_usage",
-        translation_key="session_usage",
+        name="Current session",
+        icon="mdi:timer-sand",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=0,
@@ -50,7 +51,8 @@ SENSOR_DESCRIPTIONS: tuple[ClaudeUsageSensorEntityDescription, ...] = (
     ),
     ClaudeUsageSensorEntityDescription(
         key="weekly_usage",
-        translation_key="weekly_usage",
+        name="Weekly limit",
+        icon="mdi:calendar-week",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=0,
@@ -58,13 +60,15 @@ SENSOR_DESCRIPTIONS: tuple[ClaudeUsageSensorEntityDescription, ...] = (
     ),
     ClaudeUsageSensorEntityDescription(
         key="session_reset",
-        translation_key="session_reset",
+        name="Current session reset",
+        icon="mdi:timer-refresh-outline",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda data: _parse_reset_time(data, "five_hour"),
     ),
     ClaudeUsageSensorEntityDescription(
         key="weekly_reset",
-        translation_key="weekly_reset",
+        name="Weekly limit reset",
+        icon="mdi:calendar-refresh-outline",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda data: _parse_reset_time(data, "seven_day"),
     ),

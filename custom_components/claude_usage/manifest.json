@@ -1,0 +1,9 @@
+{
+  "domain": "claude_usage",
+  "name": "Claude Usage",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/",
+  "iot_class": "cloud_polling",
+  "version": "1.0.0"
+}

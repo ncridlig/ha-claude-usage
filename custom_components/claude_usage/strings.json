@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Claude.ai",
+        "description": "Enter your Claude.ai session key.\n\nTo find it: Open claude.ai → F12 → Application tab → Cookies → claude.ai → copy the value of `sessionKey`.",
+        "data": {
+          "session_key": "Session Key"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with Claude.ai",
+        "description": "Your session key has expired. Please enter a new one.\n\nTo find it: Open claude.ai → F12 → Application tab → Cookies → claude.ai → copy the value of `sessionKey`.",
+        "data": {
+          "session_key": "Session Key"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid session key. Please check the value and try again.",
+      "cannot_connect": "Unable to connect to Claude.ai. Please check your network connection.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This Claude.ai account is already configured.",
+      "reauth_successful": "Re-authentication successful."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "session_usage": {
+        "name": "Session usage"
+      },
+      "weekly_usage": {
+        "name": "Weekly usage"
+      },
+      "session_reset": {
+        "name": "Session reset"
+      },
+      "weekly_reset": {
+        "name": "Weekly reset"
+      }
+    }
+  }
+}

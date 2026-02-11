@@ -25,13 +25,16 @@ Track your [Claude.ai](https://claude.ai) usage limits directly in Home Assistan
 2. Search for **Claude Usage**
 3. Paste your Claude.ai session key
 
-### Finding your session key
+### Finding your session key (Chrome)
 
-1. Open [claude.ai](https://claude.ai) in your browser and log in
-2. Open Developer Tools (**F12** or **Cmd+Option+I**)
-3. Go to the **Application** tab (Chrome/Edge) or **Storage** tab (Firefox)
-4. Expand **Cookies > https://claude.ai**
-5. Find `sessionKey` and copy its value
+1. Go to [claude.ai](https://claude.ai) and make sure you're logged in
+2. Press **F12** (Windows/Linux) or **Cmd+Option+I** (Mac) to open Developer Tools
+3. Click the **Application** tab in the top toolbar
+4. In the left sidebar, expand **Cookies** and click **https://claude.ai**
+5. The cookie list is sorted alphabetically — scroll down to find **`sessionKey`** (it will be near the bottom, in the "s" section)
+6. Click on the `sessionKey` row and copy the value shown at the bottom of the panel
+
+> **Important:** Do not confuse `sessionKey` with other cookies like `activitySessionId` or `__ssid`. You need the one named exactly `sessionKey`.
 
 ## Sensors
 

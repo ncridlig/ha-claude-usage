@@ -26,8 +26,15 @@ class ClaudeApiClient:
 
     @property
     def _headers(self) -> dict[str, str]:
-        """Return request headers with session cookie."""
-        return {"Cookie": f"sessionKey={self._session_key}"}
+        """Return request headers with session cookie and browser User-Agent."""
+        return {
+            "Cookie": f"sessionKey={self._session_key}",
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Safari/537.36"
+            ),
+        }
 
     async def async_get_org_id(self) -> str:
         """Fetch and cache the organization ID."""

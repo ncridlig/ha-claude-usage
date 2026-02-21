@@ -40,6 +40,11 @@
       "weekly_reset": {
         "name": "Weekly limit reset"
       }
+    },
+    "switch": {
+      "auto_renew": {
+        "name": "Automatic renew"
+      }
     }
   }
 }

@@ -36,9 +36,11 @@ Track your [Claude.ai](https://claude.ai) usage limits directly in Home Assistan
 
 > **Important:** Do not confuse `sessionKey` with other cookies like `activitySessionId` or `__ssid`. You need the one named exactly `sessionKey`.
 
-## Sensors
+## Entities
 
-Once configured, four sensors appear under a single **Claude Usage** device:
+Once configured, the following entities appear under a single **Claude Usage** device:
+
+### Sensors
 
 | Sensor | Type | Description |
 |--------|------|-------------|
@@ -48,6 +50,19 @@ Once configured, four sensors appear under a single **Claude Usage** device:
 | Weekly Reset | Timestamp | When the 7-day window resets |
 
 All sensors poll every 5 minutes.
+
+### Automatic Renew (Switch)
+
+Claude.ai's 7-day usage window doesn't automatically restart when it expires — the countdown only begins again when you send a new message. When the window expires, the **Weekly Reset** sensor shows "Unknown".
+
+The **Automatic Renew** switch handles this automatically. When enabled:
+
+1. The integration detects when the weekly cycle has expired (`resets_at` is null)
+2. It sends a minimal message ("hi") to claude.ai via a temporary conversation
+3. The temporary conversation is immediately deleted
+4. Usage data is re-fetched to reflect the new 7-day window
+
+Toggle the switch on from the dashboard or via automations. It is off by default.
 
 ## Session key expiration
 

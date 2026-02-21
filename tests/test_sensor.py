@@ -63,16 +63,17 @@ async def test_device_created(
     assert device.entry_type is dr.DeviceEntryType.SERVICE
 
 
-async def test_entities_registered(
+async def test_sensor_entities_registered(
     hass: HomeAssistant,
     setup_integration: MockConfigEntry,
     entity_registry: er.EntityRegistry,
 ) -> None:
-    """Test all 4 entities are registered under the integration."""
+    """Test all 4 sensor entities are registered under the integration."""
     entries = er.async_entries_for_config_entry(
         entity_registry, setup_integration.entry_id
     )
-    assert len(entries) == 4
+    sensor_entries = [e for e in entries if e.domain == "sensor"]
+    assert len(sensor_entries) == 4
 
-    keys = {e.unique_id.split("_", 1)[1] for e in entries}
+    keys = {e.unique_id.split("_", 1)[1] for e in sensor_entries}
     assert keys == {"session_usage", "weekly_usage", "session_reset", "weekly_reset"}

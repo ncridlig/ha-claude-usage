@@ -10,7 +10,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import ClaudeApiAuthError, ClaudeApiClient, ClaudeApiError
-from .const import CONF_AUTO_RENEW, DOMAIN, UPDATE_INTERVAL
+from .const import CONF_AUTO_RENEW, CONF_AUTO_RENEW_SESSION, DOMAIN, UPDATE_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,16 +40,22 @@ class ClaudeUsageCoordinator(DataUpdateCoordinator[dict]):
         except ClaudeApiError as err:
             raise UpdateFailed(str(err)) from err
 
-        # Auto-renew: if the weekly cycle has expired and auto_renew is enabled,
-        # send a minimal message to restart the 7-day window.
-        weekly_reset = data.get("seven_day", {}).get("resets_at")
-        auto_renew = self.config_entry.options.get(CONF_AUTO_RENEW, False)
+        # Auto-renew: if either cycle has expired and its switch is enabled,
+        # send a single minimal message to restart both windows.
+        session_expired = data.get("five_hour", {}).get("resets_at") is None
+        weekly_expired = data.get("seven_day", {}).get("resets_at") is None
+        session_renew = self.config_entry.options.get(CONF_AUTO_RENEW_SESSION, False)
+        weekly_renew = self.config_entry.options.get(CONF_AUTO_RENEW, False)
 
-        if weekly_reset is None and auto_renew:
-            _LOGGER.info("Weekly cycle expired, auto-renewing with a renewal message")
+        should_renew = (session_expired and session_renew) or (
+            weekly_expired and weekly_renew
+        )
+
+        if should_renew:
+            _LOGGER.info("Usage cycle expired, auto-renewing with a renewal message")
             try:
                 await self.client.async_send_renewal_message()
-                # Re-fetch usage to get the updated reset timestamp
+                # Re-fetch usage to get the updated reset timestamps
                 data = await self.client.async_get_usage()
             except ClaudeApiAuthError as err:
                 raise ConfigEntryAuthFailed(str(err)) from err

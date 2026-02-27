@@ -6,6 +6,7 @@ DOMAIN = "claude_usage"
 
 CONF_SESSION_KEY = "session_key"
 CONF_AUTO_RENEW = "auto_renew"
+CONF_AUTO_RENEW_SESSION = "auto_renew_session"
 
 API_BASE_URL = "https://claude.ai/api"
 API_ORGANIZATIONS_URL = f"{API_BASE_URL}/organizations"

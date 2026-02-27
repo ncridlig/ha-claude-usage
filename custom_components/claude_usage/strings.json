@@ -44,6 +44,9 @@
     "switch": {
       "auto_renew": {
         "name": "Automatic renew"
+      },
+      "auto_renew_session": {
+        "name": "Automatic renew session"
       }
     }
   }

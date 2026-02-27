@@ -14,7 +14,11 @@ from custom_components.claude_usage.api import (
     ClaudeApiClient,
     ClaudeApiError,
 )
-from custom_components.claude_usage.const import CONF_AUTO_RENEW, DOMAIN
+from custom_components.claude_usage.const import (
+    CONF_AUTO_RENEW,
+    CONF_AUTO_RENEW_SESSION,
+    DOMAIN,
+)
 from custom_components.claude_usage.coordinator import ClaudeUsageCoordinator
 
 from .conftest import MOCK_USAGE_RESPONSE
@@ -22,6 +26,11 @@ from .conftest import MOCK_USAGE_RESPONSE
 MOCK_EXPIRED_USAGE = {
     "five_hour": {"utilization": 0.0, "resets_at": None},
     "seven_day": {"utilization": 0.0, "resets_at": None},
+}
+
+MOCK_SESSION_EXPIRED_USAGE = {
+    "five_hour": {"utilization": 0.0, "resets_at": None},
+    "seven_day": {"utilization": 50.0, "resets_at": "2026-02-28T00:00:00+00:00"},
 }
 
 MOCK_RENEWED_USAGE = {
@@ -172,3 +181,82 @@ async def test_auto_renew_auth_failure_triggers_reauth(
 
     with pytest.raises(ConfigEntryAuthFailed):
         await coordinator.async_config_entry_first_refresh()
+
+
+# --- Session auto-renew tests ---
+
+
+async def test_session_auto_renew_sends_message_when_expired(
+    hass: HomeAssistant, mock_config_entry: MockConfigEntry
+) -> None:
+    """Test session auto-renewal sends a message when 5-hour cycle expired."""
+    mock_config_entry.add_to_hass(hass)
+    hass.config_entries.async_update_entry(
+        mock_config_entry, options={CONF_AUTO_RENEW_SESSION: True}
+    )
+
+    client = AsyncMock(spec=ClaudeApiClient)
+    client.async_get_usage.side_effect = [MOCK_SESSION_EXPIRED_USAGE, MOCK_RENEWED_USAGE]
+
+    coordinator = ClaudeUsageCoordinator(hass, client, mock_config_entry)
+    await coordinator.async_refresh()
+
+    assert coordinator.last_update_success is True
+    client.async_send_renewal_message.assert_called_once()
+    assert coordinator.data == MOCK_RENEWED_USAGE
+
+
+async def test_no_session_auto_renew_when_disabled(
+    hass: HomeAssistant, mock_config_entry: MockConfigEntry
+) -> None:
+    """Test no renewal when session expired but session switch is off."""
+    mock_config_entry.add_to_hass(hass)
+    # Neither switch enabled
+
+    client = AsyncMock(spec=ClaudeApiClient)
+    client.async_get_usage.return_value = MOCK_SESSION_EXPIRED_USAGE
+
+    coordinator = ClaudeUsageCoordinator(hass, client, mock_config_entry)
+    await coordinator.async_refresh()
+
+    assert coordinator.last_update_success is True
+    client.async_send_renewal_message.assert_not_called()
+
+
+async def test_both_expired_both_on_sends_one_message(
+    hass: HomeAssistant, mock_config_entry: MockConfigEntry
+) -> None:
+    """Test only one renewal message is sent when both cycles expired and both switches on."""
+    mock_config_entry.add_to_hass(hass)
+    hass.config_entries.async_update_entry(
+        mock_config_entry,
+        options={CONF_AUTO_RENEW: True, CONF_AUTO_RENEW_SESSION: True},
+    )
+
+    client = AsyncMock(spec=ClaudeApiClient)
+    client.async_get_usage.side_effect = [MOCK_EXPIRED_USAGE, MOCK_RENEWED_USAGE]
+
+    coordinator = ClaudeUsageCoordinator(hass, client, mock_config_entry)
+    await coordinator.async_refresh()
+
+    assert coordinator.last_update_success is True
+    client.async_send_renewal_message.assert_called_once()
+
+
+async def test_both_expired_only_session_on_renews(
+    hass: HomeAssistant, mock_config_entry: MockConfigEntry
+) -> None:
+    """Test renewal triggered when both expired but only session switch is on."""
+    mock_config_entry.add_to_hass(hass)
+    hass.config_entries.async_update_entry(
+        mock_config_entry, options={CONF_AUTO_RENEW_SESSION: True}
+    )
+
+    client = AsyncMock(spec=ClaudeApiClient)
+    client.async_get_usage.side_effect = [MOCK_EXPIRED_USAGE, MOCK_RENEWED_USAGE]
+
+    coordinator = ClaudeUsageCoordinator(hass, client, mock_config_entry)
+    await coordinator.async_refresh()
+
+    assert coordinator.last_update_success is True
+    client.async_send_renewal_message.assert_called_once()

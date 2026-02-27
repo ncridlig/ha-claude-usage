@@ -51,18 +51,25 @@ Once configured, the following entities appear under a single **Claude Usage** d
 
 All sensors poll every 5 minutes.
 
-### Automatic Renew (Switch)
+### Automatic Renew Switches
 
-Claude.ai's 7-day usage window doesn't automatically restart when it expires — the countdown only begins again when you send a new message. When the window expires, the **Weekly Reset** sensor shows "Unknown".
+Claude.ai's usage windows don't automatically restart when they expire — the countdown only begins again when you send a new message. When a window expires, the corresponding reset sensor shows "Unknown".
 
-The **Automatic Renew** switch handles this automatically. When enabled:
+Two switches are available:
 
-1. The integration detects when the weekly cycle has expired (`resets_at` is null)
+| Switch | Description |
+|--------|-------------|
+| Automatic renew | Renews the 7-day weekly cycle when it expires |
+| Automatic renew session | Renews the 5-hour session cycle when it expires |
+
+When either switch is enabled and its window has expired:
+
+1. The integration detects the expired state (`resets_at` is null)
 2. It sends a minimal message ("hi") to claude.ai via a temporary conversation
 3. The temporary conversation is immediately deleted
-4. Usage data is re-fetched to reflect the new 7-day window
+4. Usage data is re-fetched to reflect the renewed window
 
-Toggle the switch on from the dashboard or via automations. It is off by default.
+Since sending any message restarts both windows, only one renewal message is sent even if both cycles have expired simultaneously. Both switches are off by default.
 
 ## Session key expiration
 

@@ -59,8 +59,8 @@ Two switches are available:
 
 | Switch | Description |
 |--------|-------------|
-| Automatic renew | Renews the 7-day weekly cycle when it expires |
-| Automatic renew session | Renews the 5-hour session cycle when it expires |
+| Automatically renew weekly session | Renews the 7-day weekly cycle when it expires |
+| Automatically renew current session | Renews the 5-hour session cycle when it expires |
 
 When either switch is enabled and its window has expired:
 

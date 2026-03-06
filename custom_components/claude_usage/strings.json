@@ -43,10 +43,10 @@
     },
     "switch": {
       "auto_renew": {
-        "name": "Automatic renew"
+        "name": "Automatically renew weekly session"
       },
       "auto_renew_session": {
-        "name": "Automatic renew session"
+        "name": "Automatically renew current session"
       }
     }
   }

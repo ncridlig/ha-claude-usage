@@ -29,7 +29,7 @@ class AutoRenewSwitch(SwitchEntity):
     """Switch to enable automatic weekly cycle renewal."""
 
     _attr_has_entity_name = True
-    _attr_name = "Automatic renew"
+    _attr_name = "Automatically renew weekly session"
     _attr_icon = "mdi:autorenew"
 
     def __init__(
@@ -73,7 +73,7 @@ class AutoRenewSessionSwitch(SwitchEntity):
     """Switch to enable automatic session (5-hour) cycle renewal."""
 
     _attr_has_entity_name = True
-    _attr_name = "Automatic renew session"
+    _attr_name = "Automatically renew current session"
     _attr_icon = "mdi:autorenew"
 
     def __init__(
